@@ -1,0 +1,172 @@
+
+<title>菜单管理</title>
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" lay-filter="breadcrumb">
+		<a lay-href="">主页</a> <a><cite>系统设置</cite></a> <a><cite>菜单管理</cite></a>
+	</div>
+</div>
+<div class="layui-fluid">
+	<div class="layui-card">
+		<div class="layui-form layui-card-header layuiadmin-card-header-auto"
+			lay-filter="app-menu-list">
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<label class="layui-form-label">菜单名称</label>
+					<div class="layui-input-inline">
+						<input type="text" name="title" placeholder="请输入"
+							autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-inline">
+					<button class="layui-btn layuiadmin-btn-list" lay-submit
+						lay-filter="LAY-app-menu-search">
+						<i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-card-body">
+			<div style="padding-bottom: 10px;">
+				<button class="layui-btn layuiadmin-btn-list" data-type="menu_add">
+					<i class="layui-icon">&#xe654;</i>添加
+				</button>
+				<button class="layui-btn layuiadmin-btn-list  layui-btn-danger"
+					data-type="menu_batchdel">
+					<i class="layui-icon">&#xe640;</i>删除
+				</button>
+			</div>
+			<table id="LAY-app-menu-list" lay-filter="LAY-app-menu-list"></table>
+			<script type="text/html" id="menu_optsbar">
+  			<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="menu_edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+          	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="menu_del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+		</script>
+		</div>
+	</div>
+</div>
+
+<!-- --------------------------------- -->
+
+
+<script>
+	layui.use('menulist', layui.factory('menulist')).use(
+	[ 'admin', 'element', 'table', 'menulist' ], function() {
+
+		var $ = layui.$
+		,admin = layui.admin
+	    ,view = layui.view
+		,table = layui.table
+		,element = layui.element
+		,form = layui.form;
+		
+		
+	    form.render(null, 'app-menu-list');
+	    
+	    //监听搜索
+	    form.on('submit(LAY-app-menu-search)', function(data){
+	      var field = data.field;
+	      //执行重载
+	      table.reload('LAY-app-menu-list', {
+	        where: field
+	      });
+	    });
+	    
+	    var active = {
+   		menu_batchdel: function(){
+   	       var checkStatus = table.checkStatus('LAY-app-menu-list')
+   	       ,checkData = checkStatus.data; //得到选中的数据
+   			var ids = "";
+   	   
+   	       if(checkData.length === 0){
+   	         return layer.msg('请选择数据');
+   	       }   
+   	       
+   	       for(var i = 0 ; i < checkData.length; i++)
+    	   {
+ 	    	   	ids += checkData[i].id+",";
+    	   }
+ 
+   	       layer.confirm('确定删除吗？', function(index) {
+   	         
+   	         //执行 Ajax 后重载
+   	         /*
+   	         admin.req({
+   	           url: 'xxx'
+   	           //,……
+   	         });
+   	      */
+	   	      admin.req({
+					url:'/api/sys/menu/delete'
+					,data:{
+						 id:ids
+					},success:function(){
+						layer.msg("删除成功");
+					}
+				});   
+   	         table.reload('LAY-app-menu-list');
+   	         layer.msg('已删除');
+   	       });
+   	     }
+   	     
+   	     //添加
+   	     ,menu_add: function(){
+   	    	 admin.popup({
+   				 title: '添加菜单'
+   				 ,area: ['780px', '650px']                                       
+   				 ,id: 'LAY-popup-menu-add'
+   				 ,success: function(layero, index){
+   				 view(this.id).render('sys/menu/add').done(function(){
+   				    form.render(null, 'layuiadmin-app-form-menu');
+   				     
+   				 	////------渲染add.html页面的select------------------
+   				 	admin.req({
+   				 		url:'/api/sys/menu/lists'
+   				 		,data:{
+   				 			pid:0
+   				 		},success:function(res){
+   				 			$("#pid").empty();
+   				 			$("#pid").prepend("<option value='0'>顶级菜单</option>");//添加第一个option值
+   				 			console.log(res);
+   				 			console.log(res.data[0].id);
+   				 			//*
+   				 			for (var i = 0; i < res.count; i++) {
+   				 				　　$("#pid").append("<option value='"+res.data[i].id+"'>"+res.data[i].title+"</option>");
+   				 			}
+   				 			//*/ 
+   				 			form.render("select");
+   				 		}
+   				 	});
+   				    /////---------------------------------------------- 
+   				    //监听选中的菜单id 信息 
+   				    
+   				    
+   				    //监听提交
+   				     form.on('submit(layuiadmin-app-form-menu-submit)', function(data){
+   				       var field = data.field; //获取提交的字段
+   				       console.log(data);
+   				       //*  /提交 Ajax 成功后，关闭当前弹层并重载表格
+   				       admin.req({
+   							url:'/api/sys/menu/insert'
+   							,data:field
+   							,success:function(){
+   								layer.msg("添加成功");
+   							}
+   						});
+   				       //*/
+   				       
+   				       //$.ajax({});
+   				       layui.table.reload('LAY-app-menu-list'); //重载表格
+   				       layer.close(index); //执行关闭 
+   				         });
+   				       });
+   				     }
+   				   });
+   	     }
+   	   }; 
+   	
+   	   $('.layui-btn.layuiadmin-btn-list').on('click', function(){
+   	     var type = $(this).data('type');
+   	     active[type] ? active[type].call(this) : '';
+   	   });
+	});
+</script>

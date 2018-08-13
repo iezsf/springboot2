@@ -1,0 +1,65 @@
+<form class="layui-form" lay-filter="layuiadmin-app-form-menu"
+	id="layuiadmin-app-form-menu" style="padding: 20px 30px 0 0;">
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">上级菜单</label>
+		<div class="layui-input-block">
+			<select name="pid" id=pid>
+			</select>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">菜单名称</label>
+		<div class="layui-input-inline">
+			<input type="text" name="title" maxlength="50" minlength="1" required
+				lay-verify="required|length" placeholder="请输入菜单名称"
+				autocomplete="off" class="layui-input" />
+		</div>
+		<div class="layui-form-mid layui-word-aux">1-6个英文或汉字</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">图标</label>
+		<div class="layui-input-inline">
+			<input type="text" name="icon" maxlength="50" minlength="1" required
+				lay-verify="required|length" placeholder="请输入图标代码"
+				autocomplete="off" class="layui-input" value="layui-icon-home" />
+		</div>
+		<div class="layui-form-mid layui-word-aux">
+			<a href="http://www.layui.com/doc/element/icon.html" target="_blank">查看图标</a>只填写#后面的值
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">菜单地址</label>
+		<div class="layui-input-block">
+			<input type="text" name="jump" maxlength="200" minlength="1" required
+				lay-verify="required|length"
+				placeholder="/模块/控制器/方法,如:/sys/menu/index" autocomplete="off"
+				class="layui-input" />
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">展示排序</label>
+		<div class="layui-input-inline">
+			<input type="number" name="sort" required lay-verify="required|int"
+				value="99" autocomplete="off" class="layui-input" />
+		</div>
+		<div class="layui-form-mid layui-word-aux">从小到大排序</div>
+	</div>
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">菜单说明</label>
+		<div class="layui-input-block">
+			<textarea name="remark" placeholder="菜单描述说明" class="layui-textarea"></textarea>
+		</div>
+	</div>
+	<div class="layui-form-item">
+
+		<label class="layui-form-label"></label>
+		<div class="layui-input-inline">
+			<input type="button" lay-submit
+				lay-filter="layuiadmin-app-form-menu-submit" value="确认"
+				class="layui-btn">
+		</div>
+	</div>
+</form>
+

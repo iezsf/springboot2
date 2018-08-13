@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hust.sys.mapper.UserMapper">
+	<select id="find" parameterType="java.lang.Integer" resultMap="userInfoAndRoleLazy">
+		select id,id userId,account,nickname,email,mobile,role_id from sys_user where id = #{id}
+	</select>
+
+	<resultMap type="cn.hust.sys.bean.User" id="userInfoAndRoleLazy">
+        <association property="info" javaType="cn.hust.sys.bean.UserInfo"
+        column="userId" select="getInfo" fetchType="lazy"/>
+        <collection property="roles" javaType="java.util.ArrayList" 
+        ofType="cn.hust.sys.bean.Role" column="userId" select="getRoles" fetchType="lazy"/>
+    </resultMap>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE FROM sys_user WHERE id = #{id}
+	</delete>
+	<update id="disable" parameterType="java.lang.Integer">
+		UPDATE sys_user SET status='0' WHERE id = #{id}
+	</update>
+	<update id="enable" parameterType="java.lang.Integer">
+		UPDATE sys_user SET status='1' WHERE id = #{id}
+	</update>
+	
+	<select id="pageSelect" parameterType="map" resultMap="userInfoAndRole">
+		select id,id userId,account,nickname,email,mobile,create_time,status,role_id from sys_user 
+		<include refid="where"></include> 
+		<include refid="page"></include>
+	</select>
+	
+	<resultMap type="cn.hust.sys.bean.User" id="userInfoAndRole">
+        <association property="info" javaType="cn.hust.sys.bean.UserInfo"
+        column="userId" select="getInfo" />
+        <collection property="roles" javaType="java.util.ArrayList" 
+        ofType="cn.hust.sys.bean.Role" column="userId" select="getRoles"/>
+    </resultMap>
+	
+	<select id="getRoles" parameterType="int" resultType="cn.hust.sys.bean.Role">
+		select r.* from sys_role r 
+		join sys_user_role ur ON ur.role_id=r.id 
+		where ur.user_id = #{userId}
+	</select>
+	<delete id="deleteRoles" parameterType="java.lang.Integer">
+		DELETE FROM sys_user_role WHERE user_id = #{id}
+	</delete>
+	<select id="getInfo" parameterType="int" resultType="cn.hust.sys.bean.UserInfo">
+		select * from sys_user_info	where user_id = #{id}
+	</select>
+	
+	<select id="pageCount" parameterType="map" resultType="java.lang.Integer">
+		select count(*) from sys_user <include refid="where"></include>
+	</select>
+	
+	<select id="selectAll" parameterType="map" resultType="cn.hust.sys.bean.User">
+		select * from sys_user <include refid="where"></include> <include refid="page"></include>
+	</select>
+
+	<select id="findbyname" parameterType="java.lang.String"
+		resultType="cn.hust.sys.bean.User">
+		select * from sys_user where account = #{userName}
+	</select>
+	<select id="login" parameterType="java.lang.String"
+		resultType="cn.hust.sys.bean.User">
+		select * from sys_user where account = #{userName} and password = #{password}
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="cn.hust.sys.bean.User">
+		insert into sys_user
+		(id, account, nickname, password,
+		email, mobile, create_time, update_time,
+		status, is_del, salt)
+		values
+		(null, #{account}, #{nickname}, #{password}, #{email}, #{mobile},
+		#{createTime,jdbcType=TIMESTAMP,javaType=java.sql.Timestamp},
+		#{updateTime,jdbcType=TIMESTAMP,javaType=java.sql.Timestamp}, #{status},
+		#{isDel,jdbcType=CHAR,javaType=Boolean}, #{salt})
+	</insert>
+	
+	<insert id="addRole">
+		insert into sys_user_role
+		(id, user_id, role_id)
+		values
+		(null, #{userId}, #{roleId})
+	</insert>
+	<insert id="addInfo" parameterType="cn.hust.sys.bean.UserInfo">
+		insert into sys_user_info
+		(user_id
+		<trim prefix="," suffixOverrides=",">
+			<if test="lastTime != null">last_time,</if>
+			<if test="lastIp != null">last_ip,</if>
+			<if test="loginCount != null">login_count,</if>
+			<if test="photo != null">photo,</if>
+			<if test="qq != null">qq,</if>
+			<if test="sex != null">sex,</if>
+			<if test="address != null">address,</if>
+			<if test="birthday != null">birthday,</if>
+			<if test="question != null">question,</if>
+			<if test="answer != null">answer,</if>
+		</trim>
+		)
+		values
+		(#{userId}
+		<trim prefix="," suffixOverrides=",">
+			<if test="lastTime != null">#{lastTime},</if>
+			<if test="lastIp != null">#{lastIp},</if>
+			<if test="loginCount != null">#{loginCount},</if>
+			<if test="photo != null">#{photo},</if>
+			<if test="qq != null">#{qq},</if>
+			<if test="sex != null">#{sex},</if>
+			<if test="address != null">#{address},</if>
+			<if test="birthday != null">#{birthday},</if>
+			<if test="question != null">#{question},</if>
+			<if test="answer != null">#{answer},</if>
+		</trim>
+		)
+	</insert>
+	
+	<update id="update" parameterType="cn.hust.sys.bean.User">
+		UPDATE sys_user
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="account != null">account = #{account},</if>
+			<if test="nickname != null">nickname = #{nickname},</if>
+			<if test="password != null">password = #{password},</if>
+			<if test="email != null">email = #{email},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+			<if test="updateTime != null">update_time = #{updateTime},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="isDel != null">is_del = #{isDel},</if>
+			<if test="salt != null">salt = #{salt},</if>
+		</trim>
+		WHERE id=#{id}
+	</update>
+	<update id="updateInfo" parameterType="cn.hust.sys.bean.UserInfo">
+		update sys_user_info
+		<trim prefix="set" suffixOverrides=",">
+			<if test="lastTime != null">last_time = #{lastTime},</if>
+			<if test="lastIp != null">last_ip = #{lastIp},</if>
+			<if test="loginCount != null">login_count = #{loginCount},</if>
+			<if test="photo != null">photo = #{photo},</if>
+			<if test="qq != null">qq = #{qq},</if>
+			<if test="sex != null">sex = #{sex},</if>
+			<if test="address != null">address = #{address},</if>
+			<if test="birthday != null">birthday = #{birthday},</if>
+			<if test="question != null">question = #{question},</if>
+			<if test="answer != null">answer = #{answer},</if>
+		</trim>
+		WHERE user_id=#{userId}
+	</update>
+	
+	<sql id="where">
+		<where>
+			status = 1
+			<if test="title != null and title != ''">
+		         AND (
+			         account like concat(concat('%',#{title}),'%') 
+			         OR 
+			         nickname like concat(concat('%',#{title}),'%')
+		         )
+		    </if> 
+		</where>
+	</sql>
+	
+	<sql id="page">
+		ORDER BY 
+		<choose>
+	        <when test="_order_sort !=null and _order_sort != ''">
+	            ${_order_sort}
+	        </when>
+	        <otherwise>
+	            id
+	        </otherwise>
+	    </choose>
+		<choose>
+	        <when test="_order_direct !=null and _order_direct != ''">
+	            ${_order_direct}
+	        </when>
+	        <otherwise>
+	            DESC
+	        </otherwise>
+	    </choose>
+		LIMIT ${_page_start}, ${_page_limit} 
+	</sql>
+</mapper>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hust.sys.mapper.MenuMapper">
+	<select id="find" parameterType="java.lang.Integer" resultType="cn.hust.sys.bean.Menu">
+		SELECT * FROM sys_menu WHERE id = #{id}
+	</select>
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE FROM sys_menu
+		WHERE id = #{id}
+	</delete>
+	<update id="disable" parameterType="java.lang.Integer">
+		UPDATE sys_menu SET
+		status=0 WHERE id = #{id}
+	</update>
+	<update id="enable" parameterType="java.lang.Integer">
+		UPDATE sys_menu SET
+		status=1 WHERE id = #{id}
+	</update>
+	
+	<select id="selectUserMenu" parameterType="int"
+		resultType="cn.hust.sys.bean.Menu">
+		SELECT DISTINCT m.* FROM sys_menu m
+		JOIN sys_role_menu rm ON rm.menu_id=m.id
+		JOIN sys_user_role ur ON rm.role_id=ur.role_id
+		WHERE ur.user_id=#{userId}
+	</select>
+	
+	<!-- 根据角色id，查找该角色对应的菜单访问列表  -->
+	<select id="selectRoleMenu" parameterType="int"
+		resultType="cn.hust.sys.bean.Menu">
+		SELECT DISTINCT m.* FROM sys_menu m
+		JOIN sys_role_menu rm ON rm.menu_id=m.id
+		JOIN sys_role r ON rm.role_id=r.id
+		WHERE r.id=#{roleId}
+	</select>
+	
+ 
+	<select id="pageSelect" parameterType="map"
+		resultType="cn.hust.sys.bean.Menu">
+		SELECT id,pid,title,jump,sort,`status`,icon FROM sys_menu
+		<include refid="where"></include>
+		<include refid="page"></include>
+	</select>
+	<select id="pageCount" parameterType="map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM sys_menu
+		<include refid="where"></include>
+	</select>
+
+	<select id="selectAll" parameterType="map"
+		resultType="cn.hust.sys.bean.Menu">
+		SELECT * FROM sys_menu where status = 1
+	</select>
+	
+
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id"
+		keyColumn="id" parameterType="cn.hust.sys.bean.Menu">
+		INSERT INTO sys_menu
+		(pid,title,jump, type, sort, 
+		status, app_id,is_dev,remark,icon)
+		VALUES
+		(#{pid},#{title}, #{jump},#{type},#{sort},
+		#{status}, #{appId}, #{isDev}, #{remark}, #{icon})
+	</insert>
+	
+	<insert id="addRoleMenu">
+		insert into sys_role_menu
+		(id, role_id, menu_id)
+		values
+		(null, #{role_id}, #{menu_id})
+	</insert>
+	
+
+	<update id="update" parameterType="cn.hust.sys.bean.Menu">
+		UPDATE sys_menu
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="title != null">title = #{title},</if>
+			<if test="name!= null">name = #{name},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="type != null">type = #{type},</if>
+			<if test="sort != null">sort = #{sort},</if>
+			<if test="remark != null">remark = #{remark},</if>
+			<if test="pid != null">pid = #{pid},</if>
+			<if test="appId != null">app_id = #{appId},</if>
+			<if test="isDev != null">is_dev = #{isDev},</if>
+			<if test="icon != null">icon = #{icon},</if>
+			<if test="jump != null">jump = #{jump},</if>
+		</trim>
+		WHERE id=#{id}
+	</update>
+	
+	<!-- 通过父节点的id查找所有子节点 -->
+	<select id="findChild" parameterType="java.lang.Integer" resultType="cn.hust.sys.bean.Menu">
+		SELECT id, pid ,title, name, icon, jump  FROM sys_menu WHERE pid = #{parent} AND status = '1'
+	</select>
+
+	<sql id="where">
+		<where>
+		status = '1'
+			<if test="title != null">
+				AND title LIKE concat(concat('%',#{title}),'%')
+			</if>
+			<if test="type != null">
+				AND type = #{type}
+			</if>
+			<if test="pid != null">
+				AND pid = #{pid}
+			</if>
+			<if test="appId != null">
+				AND app_id = #{appId}
+			</if>
+			<if test="status != status">
+				AND status = #{status}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="page">
+		ORDER BY
+		<choose>
+			<when test="_order_sort !=null and _order_sort != ''">
+				${_order_sort}
+			</when>
+			<otherwise>
+				id
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="_order_direct !=null and _order_direct != ''">
+				${_order_direct}
+			</when>
+			<otherwise>
+				DESC
+			</otherwise>
+		</choose>
+		LIMIT ${_page_start}, ${_page_limit}
+	</sql>
+	
+	<!-- 查询所有的菜单 findAll-->
+	<select id="findAll" resultType="cn.hust.sys.bean.Menu">
+		SELECT id, pid ,title, name, icon, jump FROM sys_menu where status = 1
+	</select>
+	
+	<select id="findByRole" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT ysm.id FROM sys_menu ysm 
+		LEFT JOIN sys_role_menu srm ON ysm.id = srm.menu_id  
+		WHERE ysm.status = 1 AND srm.role_id = #{roleid}
+	</select>
+</mapper>

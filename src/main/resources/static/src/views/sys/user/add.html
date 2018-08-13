@@ -1,0 +1,54 @@
+<form class="layui-form" lay-filter="layuiadmin-app-form-user"
+	id="layuiadmin-app-form-user" style="padding: 20px 30px 0 0;">
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">账号</label>
+		<div class="layui-input-inline">
+			<input type="text" name="account" maxlength="50" minlength="1"
+				id="accountname" required lay-verify="required|length"
+				placeholder="请输入用户登录账号" class="layui-input" />
+		</div>
+		<div class="layui-form-mid layui-word-aux">1-50个英文或汉字</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">昵称</label>
+		<div class="layui-input-inline">
+			<input type="text" name="nickname" maxlength="50" minlength="1"
+				required lay-verify="required|length" placeholder="请输入用户昵称"
+				class="layui-input" />
+		</div>
+		<div class="layui-form-mid layui-word-aux">1-50个英文或汉字</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">邮箱</label>
+		<div class="layui-input-inline">
+			<input type="text" name="email" required lay-verify="required|email"
+				placeholder="请输入用户邮箱" class="layui-input" />
+		</div>
+		<div class="layui-form-mid layui-word-aux"></div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">手机号</label>
+		<div class="layui-input-inline">
+			<input type="text" name="mobile" required lay-verify="required|phone"
+				placeholder="请输入用户手机号" autocomplete="off" class="layui-input" />
+		</div>
+		<div class="layui-form-mid layui-word-aux"></div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">用户角色</label>
+		<div class="layui-input-inline">
+			<select name="userRoleid" id="userRoleid">
+			</select>
+		</div>
+	</div>
+	<div class="layui-form-item">
+
+		<label class="layui-form-label"></label>
+		<div class="layui-input-inline">
+			<input type="button" lay-submit
+				lay-filter="layuiadmin-app-form-user-submit" value="确认"
+				class="layui-btn">
+		</div>
+	</div>
+</form>

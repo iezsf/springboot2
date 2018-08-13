@@ -1,0 +1,42 @@
+
+
+<div class="layui-form" lay-filter="layuiadmin-form-role-edit"
+	style="padding: 20px 30px 0 0;">
+	<div class="layui-form-item" style="display:none">
+		<div class="layui-inline">
+			<label class="layui-form-label">选中的菜单ID</label>
+			<div class="layui-input-inline">
+				<input type="text" name="menu_ids" id="menu_ids" placeholder="请输入" autocomplete="off" class="layui-input">
+				<script type="text/html" template>
+						<input type="text" name="role_ids" id="role_ids" placeholder="请输入" autocomplete="off" class="layui-input"  value="{{ d.params.id || '' }}">
+				</script>
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">角色</label>
+		<div class="layui-input-block">
+			<script type="text/html" template> 
+        		<input type="text" name="title" value="{{ d.params.title || '' }}" lay-verify="required" placeholder=" " autocomplete="off" class="layui-input ">
+			</script>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">权限菜单</label>
+		<div class="layui-input-block" id="all-menu-with-checked"></div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">具体描述</label>
+		<div class="layui-input-block">
+			<script type="text/html" template>
+        		<textarea type="text" name="remark" lay-verify="required" autocomplete="off" class="layui-textarea">{{ d.params.remark || '' }}</textarea>
+      		</script>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+		<div class="layui-input-inline">
+			<input type="button" lay-submit lay-filter="LAY-role-edit-submit" value="确认" class="layui-btn">
+		</div>
+	</div>
+</div>

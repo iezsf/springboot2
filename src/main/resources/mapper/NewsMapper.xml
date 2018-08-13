@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hust.news.mapper.NewsMapper">
+	<sql id="BASE_TABLE">
+		article
+	</sql>
+
+	<sql id="BASE_COLUMN">
+		id,article_name,type,lable,article_url,pv,ischange
+	</sql>
+
+	<select id="pageSelect" parameterType="map"
+		resultType="cn.hust.news.bean.News">
+		SELECT * FROM article
+		<include refid="where"></include>
+		<include refid="page"></include>
+	</select>
+	<select id="pageCount" parameterType="map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM article
+		<include refid="where"></include>
+	</select>
+	<select id="find" parameterType="java.lang.Integer" resultType="cn.hust.news.bean.News">
+		SELECT * FROM article WHERE id = #{id}
+	</select>
+	
+	
+	<update id="update" parameterType="cn.hust.news.bean.News">
+		UPDATE article
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="lable != null"> lable= #{lable},</if>
+			<if test="pv != null">pv = #{pv},</if>
+			<if test="ischange != null">ischange = #{ischange},</if>
+		</trim>
+		WHERE id=#{id}
+	</update>
+	<select id="selectNews"  resultType="cn.hust.news.bean.News">
+		SELECT
+		<include refid="BASE_COLUMN" />
+		FROM
+		<include refid="BASE_TABLE" />
+		<include refid="where"></include>
+		<include refid="page"></include>
+		
+	</select>
+
+	<select id="findbytype" resultType="cn.hust.news.bean.News">
+		SELECT  * FROM article
+		where type= #{type}
+		<include refid="page"></include> 
+	</select>
+
+	<sql id="where">
+		<where>
+			1 = 1 
+			<if test="type != null">
+			and type = #{type}
+			</if>
+			
+			<if test="lable_no_mark != null">
+			and lable is null
+			</if>
+			
+			<if test="lable_marked != null">
+			and lable is not null
+			</if>
+		</where>
+	</sql>
+
+
+	<sql id="page">
+	
+		order by id desc LIMIT ${_page_start}, ${_page_limit}
+	</sql>
+</mapper>

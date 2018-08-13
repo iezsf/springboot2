@@ -1,0 +1,87 @@
+
+<div class="layui-fluid" lay-filter="layuiadmin-app-form-list"
+	id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+
+	<div class="layui-row layui-col-space15">
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-header" style="height: 120px;">
+					<script type="text/html" template> 
+						<h2>{{ d.params.article_name || '' }}</h2> 
+					</script>
+					类型：
+					<script type="text/html" template>{{d.params.type}}</script>
+				</div>
+				<div class="layui-card-body">
+					<div class="layui-row" id="current-news-content"
+						style="border: 1px solid red; width: 800px; height: 350px;">
+						<!--  -->
+						<iframe src="" frameborder="0" class="layadmin-iframe"
+							width="400px" scrolling="true" height="200px"></iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-col-md4">
+			<div class="layui-card">
+				<div class="layui-card-header">
+					<h3>快速标注:</h3>
+				</div>
+				<div class="layui-card-body">
+					<div class="layui-row" >
+						<script type="text/html" template>
+							  
+  						<textarea  id="mark-keywords"  lay-verify="required" placeholder="请输入"  class="layui-textarea">
+          {{ d.params.lable || '' }}
+        </textarea>
+     					 </script>
+     					 
+     					 
+     				</div>
+					<div class="layui-row" >	
+						<button class="layui-btn"  lay-submit lay-filter="do-mark-news">
+						<i class="layui-icon layui-icon-add-1" style="position: relative; top: -1px;"></i>标注
+						</button>
+	
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="layui-col-md8">
+			<div class="layui-card">
+				<div class="layui-card-header">
+					<h3>关键词列表:</h3>
+				</div>
+				<div class="layui-card-body" id="all-keywords"></div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="layui-form-item" style="display: none">
+		<script type="text/html" template>
+          <input type="text" name="article_lable" id="article_lable" value="{{ d.params.lable || '' }}" >
+        </script>
+
+		<script type="text/html" template>
+          <input type="text" name="article_id" id="article_id" value="{{ d.params.id || '' }}">
+        </script>
+
+		<script type="text/html" template>
+          <input type="text" name="article_url" id="article_url" value="{{ d.params.article_url || '' }}"  >
+        </script>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+		<div class="layui-input-inline">
+			<input type="button" lay-submit
+				lay-filter="layuiadmin-app-form-submit" value="保存并关闭" class="layui-btn">
+		</div>
+	</div>
+
+
+
+</div>

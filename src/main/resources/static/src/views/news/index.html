@@ -1,0 +1,209 @@
+
+<title>主页一</title>
+
+<div class="layui-card layadmin-header">
+	<div class="layui-breadcrumb" lay-filter="breadcrumb">
+		<a lay-href="">主页</a> <a><cite>新闻标注</cite></a>
+	</div>
+</div>
+
+<div class="layui-fluid">
+	<div class="layui-row layui-col-space15">
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-header">新闻列表</div>
+
+				<div class="layui-card-body">
+					<div class="layui-row layui-col-space10">
+						<div class="layui-col-xs12 layui-col-sm3">
+							<div class="layuiadmin-card-text ">
+								<!-- 加载新闻分类 -->
+								<ul class="layui-nav layui-nav-tree  layui-bg-green"
+									lay-filter="type-items" style="width: 100%">
+									<!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
+									<li class="layui-nav-item layui-nav-itemed"><a
+										href="javascript:;">分类列表</a>
+										<dl class="layui-nav-child" id="type-items">
+
+											<dd>
+												<a href="javascript:;">军事</a>
+											</dd>
+											<dd >
+												<a href="javascript:;">娱乐</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">旅游</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">情感</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">国际</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">社会</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">数码</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">职场</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">健康</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">美食</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">时政</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">美文</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">三农</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">财经</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">历史</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">文化</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">摄影</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">其它</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">育儿</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">科技</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">家居</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">房产</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">教育</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">动漫</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">科学</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">汽车</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">时尚</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">游戏</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">体育</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">设计</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">宠物</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">收藏</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">传媒</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">故事</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">佛学</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">心理</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">彩票</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">搞笑</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">星座</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">风水</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">移民</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">小说</a>
+											</dd>
+											<dd>
+												<a href="javascript:;">技术</a>
+											</dd>
+										</dl></li>
+
+								</ul>
+							</div>
+						</div>
+						<div class="layui-col-xs12 layui-col-sm9">
+							<div class="layuiadmin-card-text">
+								<!-- 默认加载最新的 新闻 -->
+								<div class="layui-tab layui-tab-brief"  lay-filter="news_tab">
+									<ul class="layui-tab-title">
+										<li class="layui-this"  lay-id="news_tab_new">最新</li>
+										<li lay-id="news_tab_no_mark">未标注</li>
+										<li lay-id="news_tab_marked">已标注</li>
+									</ul>
+									<div class="layui-tab-content">
+										<div class="layui-tab-item layui-show">
+											<table id="LAY-app-message-new" lay-filter="LAY-app-message-new"></table>
+										</div>
+										<div class="layui-tab-item">
+										
+											<table id="LAY-app-message-no-mark" lay-filter="LAY-app-message-no-mark"></table>未标注信息</div>
+										<div class="layui-tab-item">
+											<table id="LAY-app-message-marked" lay-filter="LAY-app-message-marked"></table>已标注信息
+											</div>
+									</div>
+								</div>
+								<script type="text/html" id="optsbar"> 
+  									<a class="layui-btn layui-btn-xs" lay-event="opt_mark">标注</a> 
+								</script>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+</div>
+<script>
+//注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+layui.use('articlelist', layui.factory('articlelist')).use(['admin', 'element','table', 'articlelist'], function(){
+	var $ = layui.$
+	,admin = layui.admin
+	,table = layui.table
+	,element = layui.element
+	,form = layui.form 
+	,element = layui.element
+	Window.jQuery = window.$ = layui.jquery;
+	//… 
+});
+</script>
+ 

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hust.sys.mapper.RoleMapper">
+	
+	<select id="find" parameterType="java.lang.Integer" resultType="cn.hust.sys.bean.Role">
+		SELECT * FROM sys_role WHERE id = #{id}
+	</select>
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE FROM sys_role WHERE id = #{id}
+	</delete>
+	<update id="disable" parameterType="java.lang.Integer">
+		UPDATE sys_role SET status='0' WHERE id = #{id}
+	</update>
+	<update id="enable" parameterType="java.lang.Integer">
+		UPDATE sys_role SET status='1' WHERE id = #{id}
+	</update>
+
+	<select id="pageSelect" parameterType="map"
+		resultType="cn.hust.sys.bean.Role">
+		SELECT * FROM sys_role
+		<include refid="where"></include>
+		<include refid="page"></include>
+	</select>
+	<select id="pageCount" parameterType="map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM sys_role
+		<include refid="where"></include>
+	</select>
+
+	<select id="selectAll" parameterType="map"
+		resultType="cn.hust.sys.bean.Role">
+		SELECT * FROM sys_role
+	</select>
+	 
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id"
+		keyColumn="id" parameterType="cn.hust.sys.bean.Role">
+		INSERT INTO sys_role
+		(id, title,status, is_default, remark)
+		VALUES
+		(null, #{title}, #{status}, #{isDefault}, #{remark})
+	</insert>
+	
+	 
+
+	<insert id="addMenu">
+		insert into sys_role_menu
+		(id, role_id, menu_id)
+		values
+		(null, #{roleId}, #{menuId})
+	</insert>
+	<delete id="deleteAllMenu">
+		DELETE FROM sys_role_menu WHERE role_id=#{roleId}
+	</delete>
+
+	<update id="update" parameterType="cn.hust.sys.bean.Role">
+		UPDATE sys_role
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="title != null">title = #{title},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="isDefault != null">is_default = #{isDefault},</if>
+			<if test="remark != null">remark = #{remark},</if>
+		</trim>
+		WHERE id=#{id}
+	</update>
+
+	<sql id="where">
+		<where>
+			status = 1
+			<if test="title != null">
+			AND	title LIKE concat(concat('%',#{title}),'%')
+			</if>
+		</where>
+	</sql>
+
+	<sql id="page">
+		ORDER BY
+		<choose>
+			<when test="_order_sort !=null and _order_sort != ''">
+				${_order_sort}
+			</when>
+			<otherwise>
+				id
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="_order_direct !=null and _order_direct != ''">
+				${_order_direct}
+			</when>
+			<otherwise>
+				DESC
+			</otherwise>
+		</choose>
+		LIMIT ${_page_start}, ${_page_limit}
+	</sql>
+</mapper>
